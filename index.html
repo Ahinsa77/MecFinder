@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MacFinder - Find Mechanics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #007bff, #00bcd4);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        /* Content */
+        .content {
+            padding: 20px;
+        }
+        
+        /* Language Buttons */
+        .lang-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .lang-btn {
+            padding: 12px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        .lang-sin {
+            background: #28a745;
+            color: white;
+        }
+        
+        .lang-eng {
+            background: #007bff;
+            color: white;
+        }
+        
+        .lang-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Input */
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        
+        /* Button */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #007bff, #00bcd4);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+        }
+        
+        .btn-call {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            margin-top: 10px;
+        }
+        
+        /* Mechanic Card */
+        .mechanic-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            border: 1px solid #e9ecef;
+        }
+        
+        .mechanic-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .mechanic-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        
+        .mechanic-rating {
+            color: #ffc107;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        
+        .mechanic-services {
+            color: #6c757d;
+            font-size: 13px;
+            margin: 5px 0;
+        }
+        
+        .mechanic-phone {
+            color: #28a745;
+            font-size: 12px;
+            margin: 5px 0;
+        }
+        
+        /* Rating Stars */
+        .stars {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .star {
+            font-size: 40px;
+            cursor: pointer;
+            color: #ddd;
+            transition: all 0.2s;
+        }
+        
+        .star:hover,
+        .star.active {
+            color: #ffc107;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        /* Screen visibility */
+        .screen {
+            display: none;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+        
+        /* Back button */
+        .back-btn {
+            background: #6c757d;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 MacFinder</h1>
+            <p>Find Mechanics Near You</p>
+        </div>
+        
+        <div class="content">
+            <!-- Screen 1: Language Selection -->
+            <div id="screen1" class="screen active">
+                <h2 style="text-align: center; margin-bottom: 20px;">Select Language</h2>
+                <div class="lang-buttons">
+                    <button class="lang-btn lang-sin" onclick="selectLanguage('si')">🇱🇰 සිංහල</button>
+                    <button class="lang-btn lang-eng" onclick="selectLanguage('en')">🇬🇧 English</button>
+                </div>
+            </div>
+            
+            <!-- Screen 2: Login -->
+            <div id="screen2" class="screen">
+                <h2 style="margin-bottom: 20px;">Login / Register</h2>
+                <div class="input-group">
+                    <label>📱 Phone Number</label>
+                    <input type="tel" id="phone" placeholder="077XXXXXXX">
+                </div>
+                <button class="btn" onclick="login()">Continue</button>
+            </div>
+            
+            <!-- Screen 3: Mechanic List -->
+            <div id="screen3" class="screen">
+                <h2 style="margin-bottom: 20px;">📍 Mechanics Near You</h2>
+                <div id="mechanicList"></div>
+            </div>
+            
+            <!-- Screen 4: Rating -->
+            <div id="screen4" class="screen">
+                <h2 style="margin-bottom: 20px;">⭐ Rate Your Experience</h2>
+                <div class="stars" id="starContainer">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+                <textarea id="comment" rows="4" placeholder="Write your feedback..."></textarea>
+                <button class="btn" onclick="submitRating()" style="margin-top: 15px;">Submit Rating</button>
+                <button class="btn back-btn" onclick="goBackToMechanics()">Back to Mechanics</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLanguage = 'en';
+        let selectedRating = 0;
+        let lastCalledMechanic = null;
+        
+        // Sample mechanics data
+        const mechanics = [
+            {
+                id: 1,
+                name: "Colombo Auto Care",
+                phone: "0771234567",
+                services: "Towing, Tire Change, Engine Repair",
+                rating: 4.8,
+                location: "Colombo"
+            },
+            {
+                id: 2,
+                name: "Kandy Garage",
+                phone: "0772345678",
+                services: "Battery, Tire Change, Oil Change",
+                rating: 4.5,
+                location: "Kandy"
+            },
+            {
+                id: 3,
+                name: "Galle Roadside Help",
+                phone: "0773456789",
+                services: "Towing, Fuel Delivery, Jump Start",
+                rating: 4.2,
+                location: "Galle"
+            },
+            {
+                id: 4,
+                name: "Negombo Mechanics",
+                phone: "0774567890",
+                services: "AC Repair, Engine, Tire",
+                rating: 4.6,
+                location: "Negombo"
+            },
+            {
+                id: 5,
+                name: "Nuwara Eliya Auto",
+                phone: "0775678901",
+                services: "Towing, Repair, Battery",
+                rating: 4.3,
+                location: "Nuwara Eliya"
+            }
+        ];
+        
+        function selectLanguage(lang) {
+            currentLanguage = lang;
+            showScreen('screen2');
+            
+            if (lang === 'si') {
+                document.querySelector('#screen2 h2').innerHTML = 'පිවිසෙන්න / ලියාපදිංචි වන්න';
+                document.querySelector('#screen2 label').innerHTML = '📱 දුරකථන අංකය';
+                document.querySelector('#screen2 .btn').innerHTML = 'ඉදිරියට යන්න';
+            } else {
+                document.querySelector('#screen2 h2').innerHTML = 'Login / Register';
+                document.querySelector('#screen2 label').innerHTML = '📱 Phone Number';
+                document.querySelector('#screen2 .btn').innerHTML = 'Continue';
+            }
+        }
+        
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+        
+        function login() {
+            let phone = document.getElementById('phone').value;
+            if (phone && phone.length >= 9) {
+                showScreen('screen3');
+                displayMechanics();
+            } else {
+                alert(currentLanguage === 'si' ? 'කරුණාකර වලංගු දුරකථන අංකයක් ඇතුළත් කරන්න' : 'Please enter a valid phone number');
+            }
+        }
+        
+        function displayMechanics() {
+            let listDiv = document.getElementById('mechanicList');
+            listDiv.innerHTML = '';
+            
+            mechanics.forEach(mechanic => {
+                let card = document.createElement('div');
+                card.className = 'mechanic-card';
+                card.innerHTML = `
+                    <div class="mechanic-name">🔧 ${mechanic.name}</div>
+                    <div class="mechanic-rating">⭐ ${mechanic.rating} / 5.0</div>
+                    <div class="mechanic-services">🛠️ ${mechanic.services}</div>
+                    <div class="mechanic-phone">📞 ${mechanic.phone}</div>
+                    <button class="btn btn-call" onclick="callMechanic(${mechanic.id})">📞 Call Now</button>
+                `;
+                listDiv.appendChild(card);
+            });
+        }
+        
+        function callMechanic(mechanicId) {
+            let mechanic = mechanics.find(m => m.id === mechanicId);
+            if (mechanic) {
+                lastCalledMechanic = mechanic;
+                window.location.href = `tel:${mechanic.phone}`;
+                
+                // Show rating screen after call
+                setTimeout(() => {
+                    showScreen('screen4');
+                    if (currentLanguage === 'si') {
+                        document.querySelector('#screen4 h2').innerHTML = '⭐ ඔබේ අත්දැකීම ශ්‍රේණිගත කරන්න';
+                    } else {
+                        document.querySelector('#screen4 h2').innerHTML = '⭐ Rate Your Experience';
+                    }
+                }, 500);
+            }
+        }
+        
+        // Star rating functionality
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', function() {
+                selectedRating = parseInt(this.getAttribute('data-value'));
+                updateStars(selectedRating);
+            });
+        });
+        
+        function updateStars(rating) {
+            document.querySelectorAll('.star').forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+        
+        function submitRating() {
+            let comment = document.getElementById('comment').value;
+            
+            if (selectedRating > 0) {
+                alert(currentLanguage === 'si' ? 
+                    `ඔබගේ ශ්‍රේණිගත කිරීම සාර්ථකයි! ⭐ ${selectedRating}/5\n${comment ? 'අදහස: ' + comment : ''}` :
+                    `Thank you for your rating! ⭐ ${selectedRating}/5\n${comment ? 'Comment: ' + comment : ''}`
+                );
+                
+                // Reset
+                selectedRating = 0;
+                updateStars(0);
+                document.getElementById('comment').value = '';
+                
+                // Go back to mechanic list
+                showScreen('screen3');
+            } else {
+                alert(currentLanguage === 'si' ? 'කරුණාකර ශ්‍රේණිගත කිරීමක් තෝරන්න' : 'Please select a rating');
+            }
+        }
+        
+        function goBackToMechanics() {
+            showScreen('screen3');
+            selectedRating = 0;
+            updateStars(0);
+            document.getElementById('comment').value = '';
+        }
+    </script>
+</body>
+</html>
